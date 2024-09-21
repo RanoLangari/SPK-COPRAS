@@ -9,12 +9,11 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-   
     <link href="https://cdn.datatables.net/2.1.5/css/dataTables.tailwindcss.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.1.5/js/dataTables.tailwindcss.js"></script>
     <script src="https://kit.fontawesome.com/1b05bcc72f.js" crossorigin="anonymous"></script>
-    <title>Perpustakaan App</title>
+    <title>Copras App</title>
 </head>
 
 <body class="h-full">

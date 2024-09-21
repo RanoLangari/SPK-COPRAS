@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('alternatif_id');
             $table->unsignedBigInteger('subkriteria_id');
-            $table->float('nilai');
             $table->timestamps();
 
             $table->foreign('alternatif_id')->references('id')->on('alternatif');

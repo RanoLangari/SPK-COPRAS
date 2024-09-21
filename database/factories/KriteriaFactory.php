@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Kriteria;
+use App\Models\SubKriteria;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Kriteria>
@@ -22,4 +24,15 @@ class KriteriaFactory extends Factory
             'tipe' => $this->faker->randomElement(['benefit', 'cost'])
         ];
     }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Kriteria $kriteria) {
+            SubKriteria::factory()->count(3)->create([
+                'kriteria_id' => $kriteria->id
+            ]);
+        });
+    }
+
+    
 }

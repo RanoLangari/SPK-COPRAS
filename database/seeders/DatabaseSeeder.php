@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Alternatif;
 use App\Models\Kriteria;
+use App\Models\SubKriteria;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

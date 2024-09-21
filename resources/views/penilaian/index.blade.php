@@ -44,43 +44,49 @@
                     Alternatif
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Subkriteria
+                    Kriteria
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    SubKriteria
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Nilai
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Created At
+                    Tanggal Dibuat
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Updated At
+                    Tanggal Diperbarui
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Action
+                    Aksi
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($nilais as $nilai)
+            @foreach ($nilais as $index => $nilai)
                 <tr
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td class="px-6 py-4">
-                        {{ $loop->iteration }}
+                        {{ $index + 1 }}
                     </td>
                     <td class="px-6 py-4">
                         {{ $nilai->alternatif->nama_alternatif }}
                     </td>
                     <td class="px-6 py-4">
+                        {{ $nilai->subkriteria->kriteria->nama_kriteria }}
+                    </td>
+                    <td class="px-6 py-4">
                         {{ $nilai->subkriteria->nama_subkriteria }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $nilai->nilai }}
+                        {{ $nilai->subkriteria->bobot }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $nilai->created_at }}
+                        {{ $nilai->created_at->format('d/m/Y H:i') }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $nilai->updated_at }}
+                        {{ $nilai->updated_at->format('d/m/Y H:i') }}
                     </td>
                     <td class="px-8 py-6">
                     <!-- Tombol Edit -->
@@ -93,7 +99,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="button" class="text-red-600 hover:text-red-900" onclick="confirmDelete({{ $nilai->id }})">
-                            Delete
+                            Hapus
                         </button>
                     </form>
 

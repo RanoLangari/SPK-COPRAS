@@ -53,7 +53,7 @@ class NilaiController extends Controller
     public function index()
     {
         // $this->CalculateCopras();
-        $nilais = Nilai::with('alternatif', 'subkriteria')->get();
+        $nilais =  $nilaiWithRelations = Nilai::with(['alternatif', 'subkriteria.kriteria'])->get();
         $alternatifs = Alternatif::all();
         $subkriterias = SubKriteria::all();
         $rankings = Rangking::all();
@@ -72,20 +72,20 @@ class NilaiController extends Controller
     {
         $request->validate([
             'alternatif_id' => 'required',
-            'subkriteria_id.*' => 'required',
-            'nilai.*' => 'required'
+            'nilai' => 'required'
         ]);
-
-        $subkriteria_ids = $request->subkriteria_id;
-        $nilais = $request->nilai;
-
-        // foreach ($subkriteria_ids as $index => $subkriteria_id) {
-        //     Nilai::create([
-        //         'alternatif_id' => $request->alternatif_id,
-        //         'subkriteria_id' => $subkriteria_id,
-        //         'nilai' => $nilais[$index]
-        //     ]);
-        // }
+    
+        $alternatif_id = $request->alternatif_id;
+        $nilai_inputs = $request->nilai;
+    
+        foreach ($nilai_inputs as $subkriteria_id => $nilai) {
+            Nilai::create([
+                'alternatif_id' => $alternatif_id,
+                'subkriteria_id' => $subkriteria_id,
+            ]);
+        }
+    
+        return redirect('/penilaian');
 
 
 

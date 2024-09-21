@@ -3,6 +3,10 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Nilai;
+use App\Models\Kriteria;
+use App\Models\SubKriteria;
+use Faker\Generator as Faker;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SubKriteria>
@@ -14,10 +18,13 @@ class SubKriteriaFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = SubKriteria::class;
     public function definition(): array
     {
         return [
-            //
+            'nama_subkriteria' => $this->faker->name(),
+            'bobot' => $this->faker->randomFloat(2, 0, 1)
         ];
     }
+
 }
