@@ -1,6 +1,6 @@
 # Project COPRASS-APP
 
-Project ini adalah aplikasi untuk melakukan penilaian dengan metode COPRAS. Aplikasi ini dibangun menggunakan framework Laravel.
+Project ini adalah aplikasi untuk melakukan penilaian berbasis Sistem Pendukung Keputusan menggunakan metode COPRAS. Aplikasi ini dibangun menggunakan framework Laravel.
 
 ## Cara Clone Project
 
