@@ -17,7 +17,9 @@ class KriteriaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nama_kriteria' => $this->faker->name(),
+            'bobot' => $this->faker->randomFloat(2, 0, 1),
+            'tipe' => $this->faker->randomElement(['benefit', 'cost'])
         ];
     }
 }

@@ -14,20 +14,14 @@
         </div>
        <div class="mt-4">
         <h2 class="block text-lg font-medium text-blue-700 mb-4">Kriteria & Subkriteria</h2>
-        @foreach ($subkriterias as $subkriteria)
+        @foreach ($kriterias as $kriteria)
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">{{ $subkriteria->kriteria->nama_kriteria }} - {{ $subkriteria->nama_subkriteria }}</label>
-                <input type="hidden" id="subkriteria_id" name="subkriteria_id[]" value="{{ $subkriteria->id }}">
-            </div>
-            <div class="mb-4">
-                <label for="nilai" class="block text-sm font-medium text-gray-700">Nilai</label>
-                <select id="nilai" name="nilai[]" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" required>
+                <label for="nilai" class="block text-sm font-medium text-gray-700">Kriteria - {{ $kriteria->nama_kriteria }}</label>
+                <select id="nilai" name="nilai[{{ $kriteria->id }}]" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                     <option value="" selected disabled>Pilih Nilai</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    @foreach ($kriteria->subkriteria as $subkriteria)
+                        <option value="{{ $subkriteria->id }}">{{ $subkriteria->nama_subkriteria }}</option>
+                    @endforeach
                 </select>
             </div>
         @endforeach

@@ -65,8 +65,8 @@ class NilaiController extends Controller
         $alternatifs = Alternatif::whereNotIn('id', function ($query) {
             $query->select('alternatif_id')->from('nilai');
         })->get();
-        $subkriterias = SubKriteria::with('kriteria')->get();
-        return view('penilaian.tambah', compact('alternatifs', 'subkriterias'));
+       $kriterias = Kriteria::with('subkriteria')->get();
+        return view('penilaian.tambah', compact('alternatifs', 'kriterias'));
     }
     public function store(Request $request)
     {
