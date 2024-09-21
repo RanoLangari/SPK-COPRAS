@@ -1,95 +1,92 @@
-# Project COPRASS-APP
+# COPRASS-APP Project
 
-Project ini adalah aplikasi untuk melakukan penilaian berbasis Sistem Pendukung Keputusan menggunakan metode COPRAS. Aplikasi ini dibangun menggunakan framework Laravel.
+This project is an application for conducting assessments based on the Decision Support System using the COPRAS method. This application is built using the Laravel framework.
 
 
-## Cara Clone Project
+## How to Clone the Project
 
-Untuk melakukan clone project ini, ikuti langkah-langkah berikut:
+To clone this project, follow the steps below:
 
-1. Buka terminal atau command prompt.
+1. Open a terminal or command prompt.
 
-2. Navigasi ke direktori dimana Anda ingin menyimpan project.
+2. Navigate to the directory where you want to save the project.
 
-3. Jalankan perintah berikut untuk melakukan clone repository:
+3. Run the following command to clone the repository:
    ```
    git clone https://github.com/RanoLangari/SPK-COPRAS.git
    ```
 
-4. Setelah proses clone selesai, navigasi ke direktori project:
+4. After the cloning process is complete, navigate to the project directory:
    ```
    cd coprass-app
    ```
 
 
-## Cara Menjalankan Project
+## How to Run the Project
 
-Ikuti langkah-langkah berikut untuk menjalankan project:
+Follow the steps below to run the project:
 
-1. Salin file `.env.example` menjadi `.env` dan sesuaikan konfigurasi database dan aplikasi sesuai dengan kebutuhan Anda:
+1. Copy the `.env.example` file to `.env` and adjust the database and application configuration according to your needs:
    ```
    cp .env.example .env
    ```
 
-2. Install semua dependency yang diperlukan menggunakan npm:
+2. Install all required dependencies using npm:
    ```
    npm install
    ```
 
-3. Install semua dependency yang diperlukan menggunakan composer:
+3. Install all required dependencies using composer:
    ```
    composer install
    ```
 
-4. Generate key aplikasi:
+4. Generate the application key:
    ```
    php artisan key:generate
    ```
 
-5. Jalankan migration untuk membuat struktur database:
+5. Run migrations to create the database structure:
    ```
    php artisan migrate
    ```
 
-6. (Opsional) Jalankan seeder untuk mengisi database dengan data awal:
+6. (Optional) Run the seeder to populate the database with initial data:
    ```
    php artisan db:seed
    ```
 
-7. Jalankan Vite Menggunakan perintah:
+7. Run Vite using the command:
    ```
    npm run dev
    ```
 
-6. Jalankan server pengembangan Laravel menggunakan perintah:
+8. Run the Laravel development server using the command:
    ```
    php artisan serve
    ```
 
-7. Buka browser dan akses aplikasi melalui URL yang diberikan oleh server pengembangan (biasanya http://localhost:8000).
+9. Open your browser and access the application through the URL provided by the development server (usually http://localhost:8000).
 
 
-8. Jika Anda menggunakan Laragon sebagai lingkungan pengembangan, Anda dapat mengikuti langkah-langkah berikut:
+10. If you are using Laragon as your development environment, you can follow these steps:
 
-   a. Pastikan Laragon sudah terinstal dan semua layanan (Apache/Nginx, MySQL, PHP) sudah berjalan.
+   a. Ensure Laragon is installed and all services (Apache/Nginx, MySQL, PHP) are running.
 
-   b. Clone repository project Anda ke dalam direktori `www` Laragon dengan menggunakan perintah `git clone https://github.com/RanoLangari/SPK-COPRAS.git`.
+   b. Clone your project repository into the `www` directory of Laragon using the command `git clone https://github.com/RanoLangari/SPK-COPRAS.git`.
 
-   c. Buka Laragon, klik kanan, pilih `Terminal`, dan jalankan perintah `composer install` untuk menginstal semua dependency PHP yang diperlukan dan `npm install` untuk menginstal semua dependency JavaScript yang diperlukan.
+   c. Open Laragon, right-click, select `Terminal`, and run the command `composer install` to install all necessary PHP dependencies and `npm install` to install all necessary JavaScript dependencies.
 
-   d. Salin file `.env.example` menjadi `.env` dan sesuaikan konfigurasi database dan aplikasi sesuai dengan kebutuhan Anda. Pastikan untuk mengatur `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` sesuai dengan pengaturan MySQL di Laragon.
+   d. Copy the `.env.example` file to `.env` and adjust the database and application configuration according to your needs. Be sure to set `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` according to the MySQL settings in Laragon.
 
-   e. Buka Laragon, klik kanan, lalu pilih `Start All` untuk memulai layanan MySQL.
+   e. Open Laragon, right-click, and select `Start All` to start the MySQL service.
 
-   f. Jalankan perintah `php artisan key:generate` untuk menghasilkan kunci aplikasi.
+   f. Run the command `php artisan key:generate` to generate the application key.
 
-   g. Jalankan perintah `php artisan migrate` untuk menjalankan migration dan membuat struktur database.
+   g. Run the command `php artisan migrate` to execute migrations and create the database structure.
 
-   h. (Opsional) Jalankan perintah `php artisan db:seed` untuk mengisi database dengan data awal.
+   h. (Optional) Run the command `php artisan db:seed` to populate the database with initial data.
 
-    i. Jalankan perintah `npm run dev` untuk mengkompilasi aset JavaScript dan CSS.
+   i. Run the command `npm run dev` to compile JavaScript and CSS assets.
 
-   j. Akses project melalui browser dengan URL yang disediakan oleh Laragon (biasanya http://nama-project.test).
-
-
-
+   j. Access the project through the browser with the URL provided by Laragon (usually http://your-project-name.test).
