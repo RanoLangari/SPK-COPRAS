@@ -23,7 +23,7 @@ class SubKriteriaFactory extends Factory
     {
         return [
             'nama_subkriteria' => $this->faker->name(),
-            'bobot' => $this->faker->randomFloat(2, 0, 1)
+            'bobot' => $this->faker->numberBetween(1, 5) * 1,
         ];
     }
 

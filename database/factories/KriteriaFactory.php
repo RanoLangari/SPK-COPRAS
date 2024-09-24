@@ -20,19 +20,19 @@ class KriteriaFactory extends Factory
     {
         return [
             'nama_kriteria' => $this->faker->name(),
-            'bobot' => $this->faker->randomFloat(2, 0, 1),
-            'tipe' => $this->faker->randomElement(['benefit', 'cost'])
+            'bobot' => $this->faker->numberBetween(1, 10) * 0.1,
+            'tipe' => $this->faker->randomElement(['Benefit', 'Cost'])
         ];
     }
 
-    public function configure()
-    {
-        return $this->afterCreating(function (Kriteria $kriteria) {
-            SubKriteria::factory()->count(3)->create([
-                'kriteria_id' => $kriteria->id
-            ]);
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (Kriteria $kriteria) {
+    //         SubKriteria::factory()->count(3)->create([
+    //             'kriteria_id' => $kriteria->id
+    //         ]);
+    //     });
+    // }
 
     
 }

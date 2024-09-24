@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
         ]);
-        Alternatif::factory(5)->create();
-        Kriteria::factory(5)->create();
+        // Alternatif::factory(3)->create();
+        // Kriteria::factory(4)->create();
 
     }
 }
