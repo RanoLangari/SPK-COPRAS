@@ -35,6 +35,7 @@ class NilaiController extends Controller
                         // Menghitung nilai normalisasi dengan membagi bobot subkriteria dengan jumlah keseluruhan bobot subkriteria dari seluruh alternatif dengan kriteria yang sama
                         $nilaiNormalisasi[] = [
                             'alternatif_id' => $alternatif->id,
+                            'nama_alternatif' => $alternatif->nama_alternatif,
                             'kriteria_id' => $kriteria->id,
                             'subkriteria_id' => $subkriteria->id,
                             'bobot' => $subkriteria->bobot,
@@ -52,6 +53,7 @@ class NilaiController extends Controller
             if ($subkriteria) {
                 $nilaiBobotNormalisasi[] = [
                     'alternatif_id' => $nilai['alternatif_id'],
+                    'nama_alternatif' => $nilai['nama_alternatif'],
                     'subkriteria_id' => $nilai['subkriteria_id'],
                     'kriteria_id' => $nilai['kriteria_id'],
                     'nilai_normalisasi' => $nilai['nilai_normalisasi'],
@@ -69,6 +71,7 @@ class NilaiController extends Controller
                 if (!isset($totalNilaiMaksBenefit[$nilai['alternatif_id']])) {
                     $totalNilaiMaksBenefit[$nilai['alternatif_id']] = [
                         'alternatif_id' => $nilai['alternatif_id'],
+                        'nama_alternatif' => $nilai['nama_alternatif'],
                         'total_normalisasi' => 0
                     ];
                 }
@@ -77,6 +80,7 @@ class NilaiController extends Controller
                 if (!isset($totalNilaiMinCost[$nilai['alternatif_id']])) {
                     $totalNilaiMinCost[$nilai['alternatif_id']] = [
                         'alternatif_id' => $nilai['alternatif_id'],
+                        'nama_alternatif' => $nilai['nama_alternatif'],
                         'total_normalisasi' => 0
                     ];
                 }
@@ -92,6 +96,7 @@ class NilaiController extends Controller
         foreach ($totalNilaiMinCost as $key => $value) {
             $bobotRelatif[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
+                'nama_alternatif' => $value['nama_alternatif'],
                 'bobot_relatif' => 1/ $value['total_normalisasi'],
             ];
             $totalBobotRelatif += 1/$value['total_normalisasi'];
@@ -101,6 +106,7 @@ class NilaiController extends Controller
         foreach ($totalNilaiMinCost as $key => $value) {
             $MultipleTotalBobotRelatifAndMinCost[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
+                'nama_alternatif' => $value['nama_alternatif'],
                 'total' => $value['total_normalisasi'] * $totalBobotRelatif,
             ];
         }
@@ -109,6 +115,7 @@ class NilaiController extends Controller
         foreach ($MultipleTotalBobotRelatifAndMinCost as $key => $value) {
             $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
+                'nama_alternatif' => $value['nama_alternatif'],
                 'total' => $sumMinCostAll / $value['total'],
             ];
         }
@@ -117,13 +124,15 @@ class NilaiController extends Controller
 
         $UIValue = [];
         foreach ($DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost as $key => $value) {
+            $alternatif = Alternatif::find($value['alternatif_id']);
             $UIValue[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
+                'nama_alternatif' => $alternatif->nama_alternatif,
                 'value' => ($value['total']/$QMax['total']) * 100
             ];
         }
         
-        dd( $sumMinCostAll,$totalNilaiMaksBenefit, $totalNilaiMinCost, $bobotRelatif, $totalBobotRelatif, $MultipleTotalBobotRelatifAndMinCost, $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost, $QMax, $UIValue);
+        dd( $nilaiNormalisasi, $nilaiBobotNormalisasi,$sumMinCostAll,$totalNilaiMaksBenefit, $totalNilaiMinCost, $bobotRelatif, $totalBobotRelatif, $MultipleTotalBobotRelatifAndMinCost, $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost, $QMax, $UIValue);
 
     }
 
