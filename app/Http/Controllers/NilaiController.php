@@ -153,7 +153,6 @@ class NilaiController extends Controller
 
     public function index()
     {
-        // $this->CalculateCopras();
         $nilais =  $nilaiWithRelations = Nilai::with(['alternatif', 'subkriteria.kriteria'])->get();
         $alternatifs = Alternatif::all();
         $subkriterias = SubKriteria::all();
@@ -185,7 +184,7 @@ class NilaiController extends Controller
                 'subkriteria_id' => $nilai
             ]);
         }
-
+        $this->CalculateCopras();
         return redirect('/penilaian');
     }
     public function update(Request $request, Nilai $nilai)
@@ -200,12 +199,15 @@ class NilaiController extends Controller
             'subkriteria_id' => $request->subkriteria_id,
             'nilai' => $request->nilai
         ]);
+
+        $this->CalculateCopras();
         return redirect('/penilaian');
     }
 
     public function destroy($id)
     {
         Nilai::destroy($id);
+        $this->CalculateCopras();
         return redirect('/penilaian');
     }
 }
