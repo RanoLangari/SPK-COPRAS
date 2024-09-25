@@ -207,7 +207,7 @@
                             {{ $ranking->alternatif->nama_alternatif }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $ranking->total_nilai }}
+                            {{ number_format($ranking->nilai, 2, '.', '') }}
                         </td>
                     </tr>
                 @endforeach

@@ -32,7 +32,6 @@ class NilaiController extends Controller
                     ])->first();
 
                     if ($nilai && $totalBobotSubKriteria > 0) {
-                        // Menghitung nilai normalisasi dengan membagi bobot subkriteria dengan jumlah keseluruhan bobot subkriteria dari seluruh alternatif dengan kriteria yang sama
                         $nilaiNormalisasi[] = [
                             'alternatif_id' => $alternatif->id,
                             'nama_alternatif' => $alternatif->nama_alternatif,
@@ -58,7 +57,7 @@ class NilaiController extends Controller
                     'kriteria_id' => $nilai['kriteria_id'],
                     'nilai_normalisasi' => $nilai['nilai_normalisasi'],
                     "bobot" => $kriteria->bobot,
-                    'nilai_bobot_normalisasi' => $nilai['nilai_normalisasi'] * $subkriteria->bobot
+                    'nilai_bobot_normalisasi' => $nilai['nilai_normalisasi'] * $kriteria->bobot
                 ];
             }
         }
@@ -89,17 +88,17 @@ class NilaiController extends Controller
                 $sumMinCostAll += $nilai['nilai_bobot_normalisasi'];
             }
         }
-        
+
         $bobotRelatif = [];
         $totalBobotRelatif = 0;
-        
+
         foreach ($totalNilaiMinCost as $key => $value) {
             $bobotRelatif[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
                 'nama_alternatif' => $value['nama_alternatif'],
-                'bobot_relatif' => 1/ $value['total_normalisasi'],
+                'bobot_relatif' => 1 / $value['total_normalisasi'],
             ];
-            $totalBobotRelatif += 1/$value['total_normalisasi'];
+            $totalBobotRelatif += 1 / $value['total_normalisasi'];
         }
 
         $MultipleTotalBobotRelatifAndMinCost = [];
@@ -120,20 +119,36 @@ class NilaiController extends Controller
             ];
         }
 
-        $QMax = max($DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost);
-
-        $UIValue = [];
+        $totalQmax = [];
         foreach ($DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost as $key => $value) {
-            $alternatif = Alternatif::find($value['alternatif_id']);
+            if (isset($totalNilaiMaksBenefit[$value['alternatif_id']])) {
+                $totalQmax[$key] = [
+                    'alternatif_id' => $value['alternatif_id'],
+                    'nama_alternatif' => $value['nama_alternatif'],
+                    'maksbenefit' => $totalNilaiMaksBenefit[$value['alternatif_id']]['total_normalisasi'],
+                    'total' => $value['total'] + $totalNilaiMaksBenefit[$value['alternatif_id']]['total_normalisasi'],
+                ];
+            }
+        }
+
+        $QMax = max(array_column($totalQmax, 'total'));
+        $UIValue = [];
+        foreach ($totalQmax as $key => $value) {
             $UIValue[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
-                'nama_alternatif' => $alternatif->nama_alternatif,
-                'value' => ($value['total']/$QMax['total']) * 100
+                'nama_alternatif' => $value['nama_alternatif'],
+                'value' => ($value['total'] / $QMax) * 100
             ];
         }
-        
-        dd( $nilaiNormalisasi, $nilaiBobotNormalisasi,$sumMinCostAll,$totalNilaiMaksBenefit, $totalNilaiMinCost, $bobotRelatif, $totalBobotRelatif, $MultipleTotalBobotRelatifAndMinCost, $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost, $QMax, $UIValue);
 
+        // dd($nilaiNormalisasi, $nilaiBobotNormalisasi, $sumMinCostAll, $totalNilaiMaksBenefit, $totalNilaiMinCost, $bobotRelatif, $totalBobotRelatif, $MultipleTotalBobotRelatifAndMinCost, $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost,$totalQmax, $QMax, $UIValue);
+
+        foreach ($UIValue as $value) {
+            Rangking::updateOrCreate(
+                ['alternatif_id' => $value['alternatif_id']],
+                ['nilai' => $value['value']]
+            );
+        }
     }
 
     public function index()
@@ -142,7 +157,7 @@ class NilaiController extends Controller
         $nilais =  $nilaiWithRelations = Nilai::with(['alternatif', 'subkriteria.kriteria'])->get();
         $alternatifs = Alternatif::all();
         $subkriterias = SubKriteria::all();
-        $rankings = Rangking::all();
+        $rankings = Rangking::orderBy('nilai', 'desc')->get();
         return view('penilaian.index', compact('nilais', 'alternatifs', 'subkriterias', 'rankings'));
     }
 
