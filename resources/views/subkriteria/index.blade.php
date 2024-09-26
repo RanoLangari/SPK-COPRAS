@@ -9,13 +9,15 @@
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-8">
         <!-- Modal toggle -->
-        <div class="mb-4">
-            <button data-modal-target="crud-modal" data-modal-toggle="crud-modal"
-            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            type="button">
-            Tambah SubKriteria
-        </button>
-        </div>
+        @if (Auth::user()->role == 'operator')
+            <div class="mb-4">
+                <button data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+                    class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    type="button">
+                    Tambah SubKriteria
+                </button>
+            </div>
+        @endif
         <div
             class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
             <label for="table-search" class="sr-only">Search</label>
@@ -43,7 +45,7 @@
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Nama Kriteria
-                    </th> 
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Bobot
                     </th>
@@ -53,9 +55,11 @@
                     <th scope="col" class="px-6 py-3">
                         Updated At
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Action
-                    </th>
+                    @if (Auth::user()->role == 'operator')
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -80,88 +84,125 @@
                         <td class="px-6 py-4">
                             {{ $subkriteria->updated_at }}
                         </td>
-                        <td class="px-8 py-6">
-                        <!-- Tombol Edit -->
-                        <button type="button" class="text-blue-600 hover:text-blue-900" data-modal-target="edit-modal-{{ $subkriteria->id }}" data-modal-toggle="edit-modal-{{ $subkriteria->id }}">
-                            Edit
-                        </button>
+                        @if (Auth::user()->role == 'operator')
+                            <td class="px-8 py-6">
+                                <!-- Tombol Edit -->
+                                <button type="button" class="text-blue-600 hover:text-blue-900"
+                                    data-modal-target="edit-modal-{{ $subkriteria->id }}"
+                                    data-modal-toggle="edit-modal-{{ $subkriteria->id }}">
+                                    Edit
+                                </button>
 
-                        <!-- Tombol Delete -->
-                        <form action="{{ route('subkriteria.destroy', $subkriteria->id) }}" method="POST" class="inline" id="delete-form-{{ $subkriteria->id }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="text-red-600 hover:text-red-900" onclick="confirmDelete({{ $subkriteria->id }})">
-                                Delete
-                            </button>
-                        </form>
+                                <!-- Tombol Delete -->
+                                <form action="{{ route('subkriteria.destroy', $subkriteria->id) }}" method="POST"
+                                    class="inline" id="delete-form-{{ $subkriteria->id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="text-red-600 hover:text-red-900"
+                                        onclick="confirmDelete({{ $subkriteria->id }})">
+                                        Delete
+                                    </button>
+                                </form>
 
-                        <script>
-                            function confirmDelete(id) {
-                                Swal.fire({
-                                    title: 'Apakah Anda yakin?',
-                                    text: "Anda tidak akan dapat mengembalikan ini!",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Ya, hapus!',
-                                    cancelButtonText: 'Batal'
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        document.getElementById('delete-form-' + id).submit();
+                                <script>
+                                    function confirmDelete(id) {
+                                        Swal.fire({
+                                            title: 'Apakah Anda yakin?',
+                                            text: "Anda tidak akan dapat mengembalikan ini!",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Ya, hapus!',
+                                            cancelButtonText: 'Batal'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('delete-form-' + id).submit();
+                                            }
+                                        })
                                     }
-                                })
-                            }
-                        </script>
+                                </script>
 
-                        <!-- Modal Edit -->
-                        <div id="edit-modal-{{ $subkriteria->id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                            <div class="relative p-4 w-full max-w-md max-h-full">
-                                <!-- Modal content -->
-                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                    <!-- Modal header -->
-                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                            Edit SubKriteria
-                                        </h3>
-                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="edit-modal-{{ $subkriteria->id }}">
-                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                            </svg>
-                                            <span class="sr-only">Close modal</span>
-                                        </button>
-                                    </div>
-                                    <form class="p-4 md:p-5" action="{{ route('subkriteria.update', $subkriteria->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="grid gap-4 mb-4 grid-cols-2">
-                                            <div class="col-span-2">
-                                                <label for="nama_subkriteria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama SubKriteria</label>
-                                                <input type="text" name="nama_subkriteria" id="nama_subkriteria" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ $subkriteria->nama_subkriteria }}" required="">
+                                <!-- Modal Edit -->
+                                <div id="edit-modal-{{ $subkriteria->id }}" tabindex="-1" aria-hidden="true"
+                                    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                    <div class="relative p-4 w-full max-w-md max-h-full">
+                                        <!-- Modal content -->
+                                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                            <!-- Modal header -->
+                                            <div
+                                                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                                    Edit SubKriteria
+                                                </h3>
+                                                <button type="button"
+                                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                                    data-modal-toggle="edit-modal-{{ $subkriteria->id }}">
+                                                    <svg class="w-3 h-3" aria-hidden="true"
+                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 14 14">
+                                                        <path stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="2"
+                                                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                    </svg>
+                                                    <span class="sr-only">Close modal</span>
+                                                </button>
                                             </div>
-                                            <div class="col-span-2">
-                                                <label for="bobot" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bobot</label>
-                                                <input type="number" name="bobot" id="bobot" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ $subkriteria->bobot }}" required="">
-                                            </div>
-                                            <div class="col-span-2">
-                                                <label for="kriteria_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kriteria</label>
-                                                <select name="kriteria_id" id="kriteria_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
-                                                    <option value="" disabled selected>Pilih Kriteria</option>
-                                                    @foreach ($kriterias as $kriteria)
-                                                        <option value="{{ $kriteria->id }}" {{ $subkriteria->kriteria_id == $kriteria->id ? 'selected' : '' }}>{{ $kriteria->nama_kriteria }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            <form class="p-4 md:p-5"
+                                                action="{{ route('subkriteria.update', $subkriteria->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="grid gap-4 mb-4 grid-cols-2">
+                                                    <div class="col-span-2">
+                                                        <label for="nama_subkriteria"
+                                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                                                            SubKriteria</label>
+                                                        <input type="text" name="nama_subkriteria"
+                                                            id="nama_subkriteria"
+                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                            value="{{ $subkriteria->nama_subkriteria }}"
+                                                            required="">
+                                                    </div>
+                                                    <div class="col-span-2">
+                                                        <label for="bobot"
+                                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bobot</label>
+                                                        <input type="number" name="bobot" id="bobot"
+                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                            value="{{ $subkriteria->bobot }}" required="">
+                                                    </div>
+                                                    <div class="col-span-2">
+                                                        <label for="kriteria_id"
+                                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kriteria</label>
+                                                        <select name="kriteria_id" id="kriteria_id"
+                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                            required="">
+                                                            <option value="" disabled selected>Pilih Kriteria
+                                                            </option>
+                                                            @foreach ($kriterias as $kriteria)
+                                                                <option value="{{ $kriteria->id }}"
+                                                                    {{ $subkriteria->kriteria_id == $kriteria->id ? 'selected' : '' }}>
+                                                                    {{ $kriteria->nama_kriteria }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <button type="submit"
+                                                    class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor"
+                                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    Update SubKriteria
+                                                </button>
+                                            </form>
                                         </div>
-                                        <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                            <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                            Update SubKriteria
-                                        </button>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        </td>
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>
@@ -169,50 +210,71 @@
 
     </div>
 
-      <!-- Main modal -->
-  <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Tambah SubKriteria
-                </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-            <form class="p-4 md:p-5" action="{{ route('subkriteria.store') }}" method="POST">
-                @csrf
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="nama_subkriteria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama SubKriteria</label>
-                        <input type="text" name="nama_subkriteria" id="nama_subkriteria" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan Nama SubKriteria" required="">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="bobot" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bobot</label>
-                        <input type="number" name="bobot" id="bobot" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan Bobot" required="">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="kriteria_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kriteria</label>
-                        <select name="kriteria_id" id="kriteria_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
-                            <option value="" disabled selected>Pilih Kriteria</option>
-                            @foreach ($kriterias as $kriteria)
-                                <option value="{{ $kriteria->id }}">{{ $kriteria->nama_kriteria }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+    <!-- Main modal -->
+    <div id="crud-modal" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        Tambah SubKriteria
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="crud-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
                 </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                    Tambah SubKriteria
-                </button>
-            </form>
+                <form class="p-4 md:p-5" action="{{ route('subkriteria.store') }}" method="POST">
+                    @csrf
+                    <div class="grid gap-4 mb-4 grid-cols-2">
+                        <div class="col-span-2">
+                            <label for="nama_subkriteria"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                                SubKriteria</label>
+                            <input type="text" name="nama_subkriteria" id="nama_subkriteria"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Masukan Nama SubKriteria" required="">
+                        </div>
+                        <div class="col-span-2">
+                            <label for="bobot"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bobot</label>
+                            <input type="number" name="bobot" id="bobot"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Masukan Bobot" required="">
+                        </div>
+                        <div class="col-span-2">
+                            <label for="kriteria_id"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kriteria</label>
+                            <select name="kriteria_id" id="kriteria_id"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                required="">
+                                <option value="" disabled selected>Pilih Kriteria</option>
+                                @foreach ($kriterias as $kriteria)
+                                    <option value="{{ $kriteria->id }}">{{ $kriteria->nama_kriteria }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        Tambah SubKriteria
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-</div> 
 </x-layout>

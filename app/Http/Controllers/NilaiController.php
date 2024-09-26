@@ -184,7 +184,10 @@ class NilaiController extends Controller
                 'subkriteria_id' => $nilai
             ]);
         }
-        $this->CalculateCopras();
+        $jumlahAlternatifBerbeda = Nilai::distinct('alternatif_id')->count('alternatif_id') > 1;
+        if ($jumlahAlternatifBerbeda) {
+            $this->CalculateCopras();
+        }
         return redirect('/penilaian');
     }
     public function update(Request $request, Nilai $nilai)
@@ -200,14 +203,20 @@ class NilaiController extends Controller
             'nilai' => $request->nilai
         ]);
 
-        $this->CalculateCopras();
+        $jumlahAlternatifBerbeda = Nilai::distinct('alternatif_id')->count('alternatif_id') > 1;
+        if ($jumlahAlternatifBerbeda) {
+            $this->CalculateCopras();
+        }
         return redirect('/penilaian');
     }
 
     public function destroy($id)
     {
         Nilai::destroy($id);
-        $this->CalculateCopras();
+        $jumlahAlternatifBerbeda = Nilai::distinct('alternatif_id')->count('alternatif_id') > 1;
+        if ($jumlahAlternatifBerbeda) {
+            $this->CalculateCopras();
+        }
         return redirect('/penilaian');
     }
 }
