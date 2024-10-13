@@ -6,6 +6,7 @@ use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\SubKriteriaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\IsOperator;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::post('penilaian/store', [NilaiController::class, 'store'])->name('penilaian.store')->middleware(IsOperator::class);
     Route::put('penilaian/update/{nilai}', [NilaiController::class, 'update'])->name('penilaian.update')->middleware(IsOperator::class);
     Route::delete('penilaian/delete/{id}', [NilaiController::class, 'destroy'])->name('penilaian.destroy')->middleware(IsOperator::class);
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profile.create');
+    Route::post('/profile', [ProfileController::class, 'store'])->name('profile.store');
+    Route::get('/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::get('login', [AuthController::class, 'login'])->name('login');

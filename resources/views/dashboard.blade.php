@@ -20,19 +20,41 @@
             </button>
         </div>
     
+    @php
+        $alternatifs = \App\Models\Alternatif::all();
+    @endphp
+    @php
+        $kriterias = \App\Models\Kriteria::all();
+    @endphp
+    @php
+        $subkriterias = \App\Models\SubKriteria::all();
+    @endphp
+
     <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        @php
-            $icons = ['fa-facebook-f', 'fa-twitter', 'fa-instagram', 'fa-linkedin-in', 'fa-github', 'fa-youtube'];
-            $randomIcons = array_rand(array_flip($icons), 3);
-        @endphp
-    
-        @foreach ($randomIcons as $icon)
-            <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                <i class="fab {{ $icon }} text-4xl text-gray-700 mb-4"></i>
-                <h2 class="text-xl font-bold mb-2">Random Card</h2>
-                <p class="text-gray-600">This is a random card with a random icon.</p>
-            </div>
-        @endforeach
+     
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Alternatif</h2>
+        <ul class="list-disc list-inside">
+            @foreach ($alternatifs as $alternatif)
+            <li class="text-gray-700">{{ $alternatif->nama_alternatif }}</li>
+            @endforeach
+        </ul>
+    </div>
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Kriteria</h2>
+        <ul class="list-disc list-inside">
+            @foreach ($kriterias as $kriteria)
+            <li class="text-gray-700">{{ $kriteria->nama_kriteria }}</li>
+            @endforeach
+        </ul>
+    </div>
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Sub Kriteria</h2>
+        <ul class="list-disc list-inside">
+            @foreach ($subkriterias as $subkriteria)
+            <li class="text-gray-700">{{ $subkriteria->nama_subkriteria }}</li>
+            @endforeach
+        </ul>
     </div>
     </div>
     

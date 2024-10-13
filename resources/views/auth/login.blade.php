@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-white">
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css','resources/js/app.js'])
     <title>Login</title>
+    <style>
+        body {
+            background-image: url('{{ asset('img/kantor.jpeg') }}'); /* Ganti dengan URL gambar latar belakang Anda */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .login-form {
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Warna latar belakang form dengan transparansi */
+            padding: 20px;
+            /* Jarak dalam form */
+            border-radius: 10px;
+            /* Sudut melengkung pada form */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Bayangan pada form */
+        }
+
+    
+            
+    </style>
 </head>
 
 <body class="h-full">
@@ -18,9 +40,12 @@
                     {{ session()->get('error_message') }}
                 </div>
             @endif
-            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Masuk Ke Akun Anda</h2>
+           
         </div>
-        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm login-form"> <!-- Tambahkan class login-form -->
+             
+        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 ">Masuk Ke Akun Anda</h2>
             <form class="space-y-6" action="{{ url('login') }}" method="POST">
                 @csrf
                 <div>
@@ -47,12 +72,6 @@
                         class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Masuk</button>
                 </div>
             </form>
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600">
-                    Belum punya akun?
-                    <a href="/register" class="font-semibold text-indigo-600 hover:text-indigo-500">Daftar</a>
-                </p>
-            </div>
         </div>
     </div>
 </body>
