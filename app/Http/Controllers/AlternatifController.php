@@ -9,18 +9,21 @@ class AlternatifController extends Controller
 {
     public function index() 
     {
-        $alternatifs = Alternatif::all();
+        $latestPeriode = Alternatif::max('periode');
+        $alternatifs = Alternatif::where('periode', $latestPeriode)->get();
         return view('alternatif.index', compact('alternatifs'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama_alternatif' => 'required'
+            'nama_alternatif' => 'required',
+            'periode' => 'required'
         ]);      
         Alternatif::create([
-            'nama_alternatif' => $request->nama_alternatif
-        ]);
+            'nama_alternatif' => $request->nama_alternatif,
+            'periode' => $request->periode
+        ]); 
         return redirect('/alternatif');
 
     }
@@ -29,10 +32,12 @@ class AlternatifController extends Controller
     public function update(Request $request, Alternatif $alternatif)
     {
         $request->validate([
-            'nama_alternatif' => 'required'
+            'nama_alternatif' => 'required',
+            'periode' => 'required'
         ]);
         $alternatif->update([
-            'nama_alternatif' => $request->nama_alternatif
+            'nama_alternatif' => $request->nama_alternatif,
+            'periode' => $request->periode
         ]);
         return redirect('/alternatif');
     }

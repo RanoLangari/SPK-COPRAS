@@ -20,6 +20,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-3">No</th>
                         <th scope="col" class="px-6 py-3">Nama Alternatif</th>
+                        <th scope="col" class="px-6 py-3">Periode</th>
                         <th scope="col" class="px-6 py-3">Created At</th>
                         <th scope="col" class="px-6 py-3">Updated At</th>
                         @if (Auth::user()->role == 'operator')
@@ -32,6 +33,7 @@
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="px-6 py-4">{{ $loop->iteration }}</td>
                         <td class="px-6 py-4">{{ $alternatif->nama_alternatif }}</td>
+                        <td class="px-6 py-4">{{ $alternatif->periode }}</td>
                         <td class="px-6 py-4">{{ $alternatif->created_at }}</td>
                         <td class="px-6 py-4">{{ $alternatif->updated_at }}</td>
                         @if (Auth::user()->role == 'operator')
@@ -91,6 +93,12 @@
                                                     <input type="text" name="nama_alternatif" id="nama_alternatif"
                                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                                         value="{{ $alternatif->nama_alternatif }}" required="">
+                                                    <label for="periode"
+                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                                                        Alternatif</label>
+                                                    <input type="week" name="periode" id="periode"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                        value="{{ $alternatif->periode }}" required="">
                                                 </div>
                                             </div>
                                             <button type="submit"
@@ -161,6 +169,12 @@
                                 Nama Alternatif
                             </label>
                             <input type="text" name="nama_alternatif" id="nama_alternatif"
+                                class="block w-full mt-1 p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                required>
+                            <label for="periode" class="block text-sm font-medium text-gray-900 dark:text-white">
+                                Periode
+                            </label>
+                            <input type="week" name="periode" id="periode"
                                 class="block w-full mt-1 p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                 required>
                         </div>

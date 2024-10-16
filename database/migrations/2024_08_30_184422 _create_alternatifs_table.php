@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_alternatif');
             $table->timestamps();
+            $table->string('periode');
         });
     }
 

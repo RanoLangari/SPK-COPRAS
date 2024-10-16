@@ -16,8 +16,9 @@ class NilaiController extends Controller
     public function CalculateCopras()
     {
         $nilaiNormalisasi = [];
-        $alternatifs = Alternatif::all();
-        $kriterias = Kriteria::all(); // Mengambil semua kriteria dari tabel kriteria
+        $latestPeriode = Alternatif::max('periode');
+        $alternatifs = Alternatif::where('periode', $latestPeriode)->get();
+        $kriterias = Kriteria::all();
 
         foreach ($alternatifs as $alternatif) {
             foreach ($kriterias as $kriteria) {
@@ -153,18 +154,25 @@ class NilaiController extends Controller
 
     public function index()
     {
-        $nilais =  $nilaiWithRelations = Nilai::with(['alternatif', 'subkriteria.kriteria'])->get();
-        $alternatifs = Alternatif::all();
+        $latestPeriode = Alternatif::max('periode');
+        $alternatifs = Alternatif::where('periode', $latestPeriode)->get();
         $subkriterias = SubKriteria::all();
-        $rankings = Rangking::orderBy('nilai', 'desc')->get();
+        $nilais = Nilai::with(['alternatif', 'subkriteria.kriteria'])
+                       ->whereIn('alternatif_id', $alternatifs->pluck('id'))
+                       ->get();
+        $rankings = Rangking::whereIn('alternatif_id', $alternatifs->pluck('id'))
+                            ->orderBy('nilai', 'desc')
+                            ->get();
         return view('penilaian.index', compact('nilais', 'alternatifs', 'subkriterias', 'rankings'));
     }
 
     public function add()
     {
-        $alternatifs = Alternatif::whereNotIn('id', function ($query) {
-            $query->select('alternatif_id')->from('nilai');
-        })->get();
+        $latestPeriode = Alternatif::max('periode');
+        $alternatifs = Alternatif::where('periode', $latestPeriode)
+            ->whereNotIn('id', function ($query) {
+                $query->select('alternatif_id')->from('nilai');
+            })->get();
         $kriterias = Kriteria::with('subkriteria')->get();
         return view('penilaian.tambah', compact('alternatifs', 'kriterias'));
     }
