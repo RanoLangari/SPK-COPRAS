@@ -12,6 +12,7 @@
                         <x-nav-link href='/kriteria' :active="request()->is('kriteria')">Kriteria</x-nav-link>
                         <x-nav-link href='/subkriteria' :active="request()->is('subkriteria')">SubKriteria</x-nav-link>
                         <x-nav-link href='/penilaian' :active="request()->is('penilaian')">Penilaian</x-nav-link>
+                        <x-nav-link href='/periode' :active="request()->is('periode')">Periode</x-nav-link>
                     </div>
                 </div>
             </div>
