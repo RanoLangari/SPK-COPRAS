@@ -2,7 +2,8 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
             <div class="flex items-center">
-                <div class="flex-shrink-0">
+                <div class="flex-shrink-0 flex items-center"> <!-- Tambahkan flex items-center di sini -->
+                    <img src="{{ asset('img/logo.jpeg') }}" alt="Logo" class="h-12 w-12 mr-4">
                     <a href="/" class="text-white font-bold text-lg">SPK Coprass</a>
                 </div>
                 <div class="hidden md:block">
@@ -20,19 +21,19 @@
             <!-- Profile Dropdown -->
             <div class="hidden md:block">
                 <div class="ml-4 relative">
-                    <button @click="isProfileOpen = !isProfileOpen" type="button" 
+                    <button @click="isProfileOpen = !isProfileOpen" type="button"
                         class="flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white">
                         <span class="sr-only">Buka menu pengguna</span>
                         <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}" alt="{{ Auth::user()->name }}">
                     </button>
 
                     <!-- Profile Dropdown Menu -->
-                    <div x-show="isProfileOpen" @click.away="isProfileOpen = false" 
-                        x-transition:enter="transition ease-out duration-150" 
-                        x-transition:enter-start="opacity-0 transform scale-95" 
-                        x-transition:enter-end="opacity-100 transform scale-100" 
-                        x-transition:leave="transition ease-in duration-75" 
-                        x-transition:leave-start="opacity-100 transform scale-100" 
+                    <div x-show="isProfileOpen" @click.away="isProfileOpen = false"
+                        x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 transform scale-95"
+                        x-transition:enter-end="opacity-100 transform scale-100"
+                        x-transition:leave="transition ease-in duration-75"
+                        x-transition:leave-start="opacity-100 transform scale-100"
                         x-transition:leave-end="opacity-0 transform scale-95"
                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                         <div class="py-2">
@@ -67,8 +68,8 @@
     </div>
 
     <!-- Mobile menu -->
-    <div x-show="isOpen" x-transition 
-         class="md:hidden" id="mobile-menu">
+    <div x-show="isOpen" x-transition
+        class="md:hidden" id="mobile-menu">
         <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
             <a href="/" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Beranda</a>
             <a href="/alternatif" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Alternatif</a>
