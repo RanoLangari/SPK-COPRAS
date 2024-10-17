@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Alternatif extends Model
 {
+ 
     use HasFactory;
     
     protected $table = 'alternatif';
@@ -15,5 +16,10 @@ class Alternatif extends Model
     public function nilai()
     {
         return $this->hasMany(NIlai::class);
+    }
+
+    public function rangking()
+    {
+        return $this->hasOne(Rangking::class, 'alternatif_id');
     }
 }
