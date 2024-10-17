@@ -7,6 +7,7 @@ use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\SubKriteriaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PeriodeController;
 use App\Http\Middleware\IsOperator;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/periode', [PeriodeController::class, 'index']);
+    Route::get('/periode/search', [PeriodeController::class, 'search'])->name('periode.search');
 });
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
