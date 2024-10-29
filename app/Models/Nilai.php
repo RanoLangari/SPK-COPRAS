@@ -10,7 +10,7 @@ class Nilai extends Model
     use HasFactory;
 
     protected $table = 'nilai';
-    protected $fillable = ['alternatif_id','subkriteria_id'];
+    protected $fillable = ['alternatif_id','kriteria_id','subkriteria_id','nilai'];
 
     public function alternatif()
     {

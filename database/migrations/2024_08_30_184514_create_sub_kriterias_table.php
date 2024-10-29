@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nama_subkriteria');
             $table->unsignedBigInteger('kriteria_id');
+            $table->decimal('start', 14, 2);
+            $table->decimal('end', 14, 2);
             $table->float('bobot');
             $table->timestamps();
-
             $table->foreign('kriteria_id')->references('id')->on('kriteria')->onDelete('cascade');
         });
     }

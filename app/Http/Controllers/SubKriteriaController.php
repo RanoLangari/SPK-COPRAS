@@ -22,12 +22,16 @@ class SubKriteriaController extends Controller
         $request->validate([
             'nama_subkriteria' => 'required',
             'bobot' => 'required',
+            'start' => 'required',
+            'end' => 'required',
             'kriteria_id' => 'required'
         ]);
         SubKriteria::create([
             'nama_subkriteria' => $request->nama_subkriteria,
             'bobot' => $request->bobot,
-            'kriteria_id' => $request->kriteria_id
+            'start' => $request->start,
+            'end' => $request->end,
+            'kriteria_id' => $request->kriteria_id,
         ]);
         return redirect('/subkriteria');
     }
@@ -37,11 +41,15 @@ class SubKriteriaController extends Controller
         $request->validate([
             'nama_subkriteria' => 'required',
             'bobot' => 'required',
+            'start' => 'required',
+            'end' => 'required',
             'kriteria_id' => 'required'
         ]);
         $subkriteria->update([
             'nama_subkriteria' => $request->nama_subkriteria,
             'bobot' => $request->bobot,
+            'start' => $request->start,
+            'end' => $request->end,
             'kriteria_id' => $request->kriteria_id
         ]);
         return redirect('/subkriteria');

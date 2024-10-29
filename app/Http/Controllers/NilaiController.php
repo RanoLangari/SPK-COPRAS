@@ -142,7 +142,6 @@ class NilaiController extends Controller
             ];
         }
 
-        // dd($nilaiNormalisasi, $nilaiBobotNormalisasi, $sumMinCostAll, $totalNilaiMaksBenefit, $totalNilaiMinCost, $bobotRelatif, $totalBobotRelatif, $MultipleTotalBobotRelatifAndMinCost, $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost,$totalQmax, $QMax, $UIValue);
 
         foreach ($UIValue as $value) {
             Rangking::updateOrCreate(
@@ -160,9 +159,20 @@ class NilaiController extends Controller
         $nilais = Nilai::with(['alternatif', 'subkriteria.kriteria'])
                        ->whereIn('alternatif_id', $alternatifs->pluck('id'))
                        ->get();
+
+        $bobotTerbesar = SubKriteria::max('bobot');
+        $kriteriaDenganBobotTerbesar = SubKriteria::where('bobot', $bobotTerbesar)->first()->kriteria_id;
+
         $rankings = Rangking::whereIn('alternatif_id', $alternatifs->pluck('id'))
                             ->orderBy('nilai', 'desc')
-                            ->get();
+                            ->get()
+                            ->sortByDesc(function ($ranking) use ($nilais, $kriteriaDenganBobotTerbesar) {
+                                $nilaiAlternatif = $nilais->where('alternatif_id', $ranking->alternatif_id)
+                                                          ->where('kriteria_id', $kriteriaDenganBobotTerbesar)
+                                                          ->first();
+                                return $nilaiAlternatif ? $nilaiAlternatif->nilai : 0;
+                            });
+
         return view('penilaian.index', compact('nilais', 'alternatifs', 'subkriterias', 'rankings'));
     }
 
@@ -186,12 +196,26 @@ class NilaiController extends Controller
         $alternatif_id = $request->alternatif_id;
         $nilai_inputs = $request->nilai;
 
-        foreach ($nilai_inputs as $subkriteria_id => $nilai) {
-            Nilai::create([
-                'alternatif_id' => $alternatif_id,
-                'subkriteria_id' => $nilai
-            ]);
+        $nilaiData = [];
+        foreach ($nilai_inputs as $kriteria_id => $nilai) {
+            $subkriterias = SubKriteria::where('kriteria_id', $kriteria_id)
+                                        ->where('start', '<=', $nilai)
+                                        ->where('end', '>=', $nilai)
+                                        ->get();
+            foreach ($subkriterias as $subkriteria) {
+                $nilaiData[] = [
+                    'alternatif_id' => $alternatif_id,
+                    'subkriteria_id' => $subkriteria->id,
+                    'kriteria_id' => $kriteria_id,
+                    'nilai' => $nilai,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
         }
+
+
+        Nilai::insert($nilaiData);
         $jumlahAlternatifBerbeda = Nilai::distinct('alternatif_id')->count('alternatif_id') > 1;
         if ($jumlahAlternatifBerbeda) {
             $this->CalculateCopras();

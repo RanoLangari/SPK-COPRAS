@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('nilai', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('alternatif_id');
+            $table->unsignedBigInteger('kriteria_id');
             $table->unsignedBigInteger('subkriteria_id');
+            $table->decimal('nilai', 14, 2);
             $table->timestamps();
 
             $table->foreign('alternatif_id')->references('id')->on('alternatif');
             $table->foreign('subkriteria_id')->references('id')->on('subkriteria');
+            $table->foreign('kriteria_id')->references('id')->on('kriteria');
             
         });
     }
