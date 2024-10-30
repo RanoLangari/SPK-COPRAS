@@ -17,7 +17,7 @@
         @foreach ($kriterias as $kriteria)
         <div class="mb-4">
             <label for="nilai" class="block text-sm font-medium text-gray-700">Kriteria - {{ $kriteria->nama_kriteria }}</label>
-            <input type="number" id="nilai[]" name="nilai[{{ $kriteria->id }}]" class="mt-4 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" placeholder="Masukkan Nilai">
+            <input type="number" step="0.01" id="nilai[]" name="nilai[{{ $kriteria->id }}]" class="mt-4 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" placeholder="Masukkan Nilai">
         </div>
     @endforeach
        </div>
