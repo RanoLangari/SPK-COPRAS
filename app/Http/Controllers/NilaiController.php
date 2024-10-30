@@ -149,7 +149,7 @@ class NilaiController extends Controller
                 ['nilai' => $value['value']]
             );
         }
-    }
+    } 
 
     public function index()
     {

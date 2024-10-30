@@ -104,14 +104,14 @@
                                                             <div>
                                                                 <label for="start"
                                                                     class="block text-sm font-medium text-gray-900 dark:text-white">Start</label>
-                                                                <input type="number" id="start" name="start"
+                                                                <input type="number" id="start" name="start" step="0.01"
                                                                     class="block w-full mt-1 p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                                                     value="{{ $subkriteria->start }}" required>
                                                             </div>
                                                             <div>
                                                                 <label for="end"
                                                                     class="block text-sm font-medium text-gray-900 dark:text-white">End</label>
-                                                                <input type="number" id="end" name="end"
+                                                                <input type="number" id="end" name="end" step="0.01"
                                                                     class="block w-full mt-1 p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                                                     value="{{ $subkriteria->end }}" required>
                                                             </div>
@@ -209,14 +209,14 @@
                                     <div>
                                         <label for="start"
                                             class="block text-sm font-medium text-gray-900 dark:text-white">Start</label>
-                                        <input type="number" id="start" name="start"
+                                        <input type="number" id="start" name="start" step="0.01"
                                             class="block w-full mt-1 p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                             required>
                                     </div>
                                     <div>
                                         <label for="end"
                                             class="block text-sm font-medium text-gray-900 dark:text-white">End</label>
-                                        <input type="number" id="end" name="end"
+                                        <input type="number" id="end" name="end" step="0.01"
                                             class="block w-full mt-1 p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                             required>
                                     </div>
