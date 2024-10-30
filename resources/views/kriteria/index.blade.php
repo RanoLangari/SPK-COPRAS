@@ -52,6 +52,24 @@
                                 </button>
                             </form>
 
+                            <script>
+                                function confirmDelete(id) {
+                                    Swal.fire({
+                                        title: 'Apakah Anda yakin?',
+                                        text: "Anda tidak akan dapat mengembalikan ini!",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Ya, hapus!',
+                                        cancelButtonText: 'Batal'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            document.getElementById('delete-form-' + id).submit();
+                                        }
+                                    })
+                                }
+                            </script>
                             <!-- Modal Edit -->
                             <div id="edit-modal-{{ $kriteria->id }}" tabindex="-1" aria-hidden="true"
                                 class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
