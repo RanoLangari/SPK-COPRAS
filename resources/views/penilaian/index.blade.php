@@ -248,7 +248,7 @@
                     paging: true,
                     searching: true,
                     info: true,
-                    pageLength: 25,
+                    pageLength: 50,
                     autoWidth: false,
                     responsive: true,
                     columnDefs: [
