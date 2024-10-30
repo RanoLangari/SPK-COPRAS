@@ -188,6 +188,7 @@ class NilaiController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'alternatif_id' => 'required',
             'nilai' => 'required|array'
@@ -214,7 +215,7 @@ class NilaiController extends Controller
             }
         }
 
-
+        dd($request->all(), $nilaiData);
         Nilai::insert($nilaiData);
         $jumlahAlternatifBerbeda = Nilai::distinct('alternatif_id')->count('alternatif_id') > 1;
         if ($jumlahAlternatifBerbeda) {

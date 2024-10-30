@@ -252,6 +252,7 @@
                 $('#subKriteriaTable').DataTable({
                     paging: true,
                     searching: true,
+                    pageLength: 25,
                     info: true,
                     autoWidth: false,
                     responsive: true

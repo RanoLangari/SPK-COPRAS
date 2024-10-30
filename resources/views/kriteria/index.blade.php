@@ -209,6 +209,7 @@
                     paging: true,
                     searching: true,
                     info: true,
+                    pageLength: 25,
                     autoWidth: false,
                     responsive: true
                 });
