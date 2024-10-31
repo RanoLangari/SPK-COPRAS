@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rangking;
 use App\Models\Alternatif;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,7 @@ class PeriodeController extends Controller
     // Method untuk menampilkan form pencarian periode
     public function index(Request $request)
     {
+        
         // Ambil semua periode unik untuk dropdown
         $availablePeriodes = Alternatif::pluck('periode')->unique()->map(function ($periode) {
             return $this->formatPeriode($periode);
@@ -27,27 +29,26 @@ class PeriodeController extends Controller
             'periode' => 'required|string',
         ]);
 
-        // Ambil input periode dari form
+        // Ambil input periode dari form dan ubah ke format asli
         $formattedPeriode = $request->input('periode');
-
-        // Ubah kembali periode dari format "Tahun, Bulan, Minggu ke-" menjadi format aslinya "YYYY-WW"
         $periode = $this->reverseFormatPeriode($formattedPeriode);
 
-        // Ambil data alternatif berdasarkan periode yang dipilih
-        $alternatifs = Alternatif::where('periode', $periode)->get();
+         // Tambahkan logging untuk membantu mendiagnosis masalah
+    // \Illuminate\Support\Facades\Log::debug("Formatted Periode: {$formattedPeriode}, Periode: {$periode}");
+
+        // Ambil data alternatif dan rangking berdasarkan periode yang dipilih
+        $alternatifs = Alternatif::with('rangking')->where('periode', $periode)->get();
 
         // Parsing periode dari format YYYY-WW menjadi Tahun, Bulan, dan Minggu sesuai kalender
-        [$year, $weekNumber] = explode('-W', $periode); // Misal 2024-W42
+        [$year, $weekNumber] = explode('-W', $periode);
         $weekNumber = (int) $weekNumber;
-
-        // Menghitung bulan berdasarkan minggu ke berapa
         $firstDayOfYear = new \DateTime($year . '-01-01');
         $firstDayOfYear->modify('+' . ($weekNumber - 1) . ' weeks');
         $month = $firstDayOfYear->format('F'); // Format nama bulan
 
         // Kirimkan hasil pencarian dan periode yang dipilih ke view
         return view('periode.index', [
-            'availablePeriodes' => Alternatif::pluck('periode')->unique()->map(function ($periode) {
+            'availablePeriodes' => Alternatif::pluck('periode')->unique()->sort()->map(function ($periode) {
                 return $this->formatPeriode($periode);
             }),
             'alternatifs' => $alternatifs, // Data alternatif berdasarkan periode
@@ -90,13 +91,14 @@ class PeriodeController extends Controller
     {
         // Ubah kembali periode dari format "Tahun, Bulan, Minggu ke-" menjadi format aslinya "YYYY-WW"
         [$year, $month, $weekOfMonth] = explode(', ', $formattedPeriode);
+        $monthNumber = date('m', strtotime("$year-$month-01"));
         $weekOfMonth = (int) str_replace('Minggu ke-', '', $weekOfMonth);
 
         // Menghitung minggu ke berapa dalam tahun tersebut
-        $firstDayOfMonth = new \DateTime($year . '-' . date('m', strtotime($month)) . '-01');
-        $firstDayOfMonth->modify('+' . ($weekOfMonth - 1) . ' weeks');
-        $weekNumber = $firstDayOfMonth->format('W');
+        $date = new \DateTime("$year-$monthNumber-01");
+        $date->add(new \DateInterval('P' . ($weekOfMonth - 1) . 'W'));
+        $weekNumber = $date->format('W');
 
-        return $year . '-W' . $weekNumber;
+        return $year . '-W' . str_pad($weekNumber, 2, '0', STR_PAD_LEFT);
     }
 }

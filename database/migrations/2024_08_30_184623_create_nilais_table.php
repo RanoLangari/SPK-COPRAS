@@ -19,9 +19,9 @@ return new class extends Migration
             $table->decimal('nilai', 14, 2);
             $table->timestamps();
 
-            $table->foreign('alternatif_id')->references('id')->on('alternatif');
-            $table->foreign('subkriteria_id')->references('id')->on('subkriteria');
-            $table->foreign('kriteria_id')->references('id')->on('kriteria');
+            $table->foreign('alternatif_id')->references('id')->on('alternatif')->onDelete('cascade');
+            $table->foreign('kriteria_id')->references('id')->on('kriteria')->onDelete('cascade');
+            $table->foreign('subkriteria_id')->references('id')->on('subkriteria')->onDelete('cascade');
             
         });
     }
