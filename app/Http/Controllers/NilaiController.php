@@ -160,18 +160,26 @@ class NilaiController extends Controller
                        ->whereIn('alternatif_id', $alternatifs->pluck('id'))
                        ->get();
 
-        $bobotTerbesar = SubKriteria::max('bobot');
-        $kriteriaDenganBobotTerbesar = SubKriteria::where('bobot', $bobotTerbesar)->first()->kriteria_id;
+        $bobotTerbesar = Kriteria::max('bobot');
+        $kriteriaDenganBobotTerbesar = Kriteria::where('bobot', $bobotTerbesar)->first()->id;
 
-        $rankings = Rangking::whereIn('alternatif_id', $alternatifs->pluck('id'))
-                            ->orderBy('nilai', 'desc')
-                            ->get()
-                            ->sortByDesc(function ($ranking) use ($nilais, $kriteriaDenganBobotTerbesar) {
-                                $nilaiAlternatif = $nilais->where('alternatif_id', $ranking->alternatif_id)
-                                                          ->where('kriteria_id', $kriteriaDenganBobotTerbesar)
-                                                          ->first();
-                                return $nilaiAlternatif ? $nilaiAlternatif->nilai : 0;
+        $rankings = Rangking::with('alternatif')
+            ->whereIn('alternatif_id', $alternatifs->pluck('id'))
+            ->orderBy('nilai', 'desc')
+            ->get()
+            ->groupBy('nilai')
+            ->flatMap(function ($group) use ($nilais, $kriteriaDenganBobotTerbesar) {
+                if ($group->count() > 1) {
+                    return $group->sortByDesc(function ($ranking) use ($nilais, $kriteriaDenganBobotTerbesar) {
+                        $nilaiAlternatif = $nilais->where('alternatif_id', $ranking->alternatif_id)
+                            ->first(function($nilai) use ($kriteriaDenganBobotTerbesar) {
+                                return $nilai->subkriteria->kriteria_id === $kriteriaDenganBobotTerbesar;
                             });
+                        return $nilaiAlternatif ? $nilaiAlternatif->nilai : 0;
+                    });
+                }
+                return $group;
+            })->values();
 
         return view('penilaian.index', compact('nilais', 'alternatifs', 'subkriterias', 'rankings'));
     }
@@ -244,7 +252,7 @@ class NilaiController extends Controller
 
     public function destroy($id)
     {
-        Nilai::destroy($id);
+        Nilai::destroy('alternatif_id', $id);
         $jumlahAlternatifBerbeda = Nilai::distinct('alternatif_id')->count('alternatif_id') > 1;
         if ($jumlahAlternatifBerbeda) {
             $this->CalculateCopras();
