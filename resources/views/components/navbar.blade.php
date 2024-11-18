@@ -21,7 +21,7 @@
                         @else
                             <div x-data="{ showAlert: false }">
                                 <a href="#" @click.prevent="showAlert = true" class="text-red-500 hover:text-red-700">Penilaian</a>
-                                <div x-show="showAlert" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform translate-y-4" class="bg-red-500 text-white px-4 py-2 rounded-md mt-2">
+                                <div x-show="showAlert" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform translate-y-4" class="fixed top-16 left-0 right-0 bg-red-500 text-white px-4 py-2 rounded-md mt-2 mx-4">
                                     Isi sub kriteria terlebih dahulu jika ingin mengakses penilaian.
                                 </div>
                             </div>
