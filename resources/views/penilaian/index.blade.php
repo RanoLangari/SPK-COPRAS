@@ -100,11 +100,53 @@
                                     cancelButtonText: 'Batal'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        document.getElementById('delete-form-' + id).submit();
+                                        var form = document.getElementById('delete-form-' + id);
+                                        var formData = new FormData(form);
+                                        Swal.fire({
+                                            title: 'Sedang diproses...',
+                                            text: 'Mohon tunggu sebentar.',
+                                            icon: 'info',
+                                            allowOutsideClick: false,
+                                            showConfirmButton: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                fetch(form.action, {
+                                                    method: 'POST',
+                                                    body: formData,
+                                                    headers: {
+                                                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                                                    }
+                                                }).then(response => {
+                                                    if (response.ok) {
+                                                        return response.json().catch(() => ({}));
+                                                    }
+                                                    throw new Error('Network response was not ok.');
+                                                }).then(data => {
+                                                    Swal.fire({
+                                                        title: 'Berhasil!',
+                                                        text: 'Data berhasil dihapus.',
+                                                        icon: 'success',
+                                                        confirmButtonText: 'OK'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            location.reload();
+                                                        }
+                                                    });
+                                                }).catch(error => {
+                                                    Swal.fire({
+                                                        title: 'Error!',
+                                                        text: 'Terjadi kesalahan, silakan coba lagi.',
+                                                        icon: 'error',
+                                                        confirmButtonText: 'OK'
+                                                    });
+                                                });
+                                            }
+                                        });
                                     }
-                                })
+                                });
                             }
                         </script>
+                        <!-- Loading Spinner -->
 
                         <!-- Modal Edit -->
                         <div id="edit-modal-{{ $nilai->id }}" tabindex="-1" aria-hidden="true"
@@ -132,7 +174,7 @@
                                         </button>
                                     </div>
                                     <form class="p-4 md:p-5" action="{{ route('penilaian.update', $nilai->id) }}"
-                                        method="POST">
+                                        method="POST" onsubmit="return handleUpdate(event, {{ $nilai->id }})">
                                         @csrf
                                         @method('PUT')
                                         <div class="grid gap-4 mb-4 grid-cols-2">
@@ -190,6 +232,55 @@
                                 </div>
                             </div>
                         </div>
+                        <script>
+                            document.querySelectorAll('#edit-modal-{{ $nilai->id }} form').forEach(form => {
+                                form.addEventListener('submit', function(event) {
+                                    event.preventDefault();
+                                    var form = this;
+                                    Swal.fire({
+                                        title: 'Sedang diproses...',
+                                        text: 'Mohon tunggu sebentar.',
+                                        icon: 'info',
+                                        allowOutsideClick: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            var formData = new FormData(form);
+                                            fetch(form.action, {
+                                                method: 'POST',
+                                                body: formData,
+                                                headers: {
+                                                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                                                }
+                                            }).then(response => {
+                                                if (response.ok) {
+                                                    return response.json().catch(() => ({}));
+                                                }
+                                                throw new Error('Network response was not ok.');
+                                            }).then(data => {
+                                                Swal.fire({
+                                                    title: 'Berhasil!',
+                                                    text: 'Data berhasil diperbarui.',
+                                                    icon: 'success',
+                                                    confirmButtonText: 'OK'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        location.reload();
+                                                    }
+                                                });
+                                            }).catch(error => {
+                                                Swal.fire({
+                                                    title: 'Error!',
+                                                    text: 'Terjadi kesalahan, silakan coba lagi.',
+                                                    icon: 'error',
+                                                    confirmButtonText: 'OK'
+                                                });
+                                            });
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
                     </td>
 
                     @endif

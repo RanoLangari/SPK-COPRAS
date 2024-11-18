@@ -65,12 +65,54 @@
                                         cancelButtonText: 'Batal'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            document.getElementById('delete-form-' + id).submit();
+                                            var form = document.getElementById('delete-form-' + id);
+                                            var formData = new FormData(form);
+                                            Swal.fire({
+                                                title: 'Sedang diproses...',
+                                                text: 'Mohon tunggu sebentar.',
+                                                icon: 'info',
+                                                allowOutsideClick: false,
+                                                showConfirmButton: false,
+                                                didOpen: () => {
+                                                    Swal.showLoading();
+                                                    fetch(form.action, {
+                                                        method: 'POST',
+                                                        body: formData,
+                                                        headers: {
+                                                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                                                        }
+                                                    }).then(response => {
+                                                        if (response.ok) {
+                                                            return response.json().catch(() => ({}));
+                                                        }
+                                                        throw new Error('Network response was not ok.');
+                                                    }).then(data => {
+                                                        Swal.fire({
+                                                            title: 'Berhasil!',
+                                                            text: 'Data berhasil dihapus.',
+                                                            icon: 'success',
+                                                            confirmButtonText: 'OK'
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                location.reload();
+                                                            }
+                                                        });
+                                                    }).catch(error => {
+                                                        Swal.fire({
+                                                            title: 'Error!',
+                                                            text: 'Terjadi kesalahan, silakan coba lagi.',
+                                                            icon: 'error',
+                                                            confirmButtonText: 'OK'
+                                                        });
+                                                    });
+                                                }
+                                            });
                                         }
-                                    })
+                                    });
                                 }
                             </script>
                             <!-- Modal Edit -->
+                           
                             <div id="edit-modal-{{ $kriteria->id }}" tabindex="-1" aria-hidden="true"
                                 class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                 <div class="relative p-4 w-full max-w-md max-h-full">
@@ -135,6 +177,55 @@
                                     </div>
                                 </div>
                             </div>
+                        <script>
+                            document.querySelectorAll('#edit-modal-{{ $kriteria->id }} form').forEach(form => {
+                                form.addEventListener('submit', function(event) {
+                                    event.preventDefault();
+                                    var form = this;
+                                    Swal.fire({
+                                        title: 'Sedang diproses...',
+                                        text: 'Mohon tunggu sebentar.',
+                                        icon: 'info',
+                                        allowOutsideClick: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            var formData = new FormData(form);
+                                            fetch(form.action, {
+                                                method: 'POST',
+                                                body: formData,
+                                                headers: {
+                                                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                                                }
+                                            }).then(response => {
+                                                if (response.ok) {
+                                                    return response.json().catch(() => ({}));
+                                                }
+                                                throw new Error('Network response was not ok.');
+                                            }).then(data => {
+                                                Swal.fire({
+                                                    title: 'Berhasil!',
+                                                    text: 'Data berhasil diperbarui.',
+                                                    icon: 'success',
+                                                    confirmButtonText: 'OK'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        location.reload();
+                                                    }
+                                                });
+                                            }).catch(error => {
+                                                Swal.fire({
+                                                    title: 'Error!',
+                                                    text: 'Terjadi kesalahan, silakan coba lagi.',
+                                                    icon: 'error',
+                                                    confirmButtonText: 'OK'
+                                                });
+                                            });
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
                         </td>
                         @endif
                     </tr>
@@ -198,6 +289,53 @@
                 </div>
             </div>
         </div>
+    <script>
+        document.querySelector('#crud-modal form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var form = this;
+            Swal.fire({
+                title: 'Sedang diproses...',
+                text: 'Mohon tunggu sebentar.',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    var formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            return response.json().catch(() => ({}));
+                        }
+                        throw new Error('Network response was not ok.');
+                    }).then(data => {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Data berhasil ditambahkan.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }).catch(error => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Terjadi kesalahan, silakan coba lagi.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 
         <!-- DataTables Script -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
