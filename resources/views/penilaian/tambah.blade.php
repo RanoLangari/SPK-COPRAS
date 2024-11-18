@@ -1,6 +1,6 @@
 <x-layout>
 <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8">
-    <form  method="POST" action="{{ route('penilaian.store') }}">
+    <form method="POST" action="{{ route('penilaian.store') }}" id="penilaianForm">
         @csrf
         <div class="mb-4">
             <h2 class="block text-lg font-medium text-blue-700 mb-4">Alternatif</h2>
@@ -28,4 +28,53 @@
     </div>
     </form>
 </div>
+
+
+<script>
+    document.getElementById('penilaianForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = this;
+        Swal.fire({
+            title: 'Sedang diproses...',
+            text: 'Mohon tunggu sebentar.',
+            icon: 'info',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+                var formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json().catch(() => ({}));
+                    }
+                    throw new Error('Network response was not ok.');
+                }).then(data => {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Data berhasil ditambahkan.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{{ route('penilaian.index') }}';
+                        }
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan, silakan coba lagi.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            }
+        });
+    });
+</script>
 </x-layout>

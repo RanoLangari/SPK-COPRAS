@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::post('subkriteria/store', [SubKriteriaController::class, 'store'])->name('subkriteria.store')->middleware(IsOperator::class);
     Route::put('subkriteria/update/{subkriteria}', [SubKriteriaController::class, 'update'])->name('subkriteria.update')->middleware(IsOperator::class);
     Route::delete('subkriteria/delete/{id}', [SubKriteriaController::class, 'destroy'])->name('subkriteria.destroy')->middleware(IsOperator::class);
-    Route::get('/penilaian', [NilaiController::class, 'index']);
+    Route::get('/penilaian', [NilaiController::class, 'index'])->name('penilaian.index');
     Route::get('/penilaian/add', [NilaiController::class, 'add'])->name('penilaian.add')->middleware(IsOperator::class);
     Route::post('penilaian/store', [NilaiController::class, 'store'])->name('penilaian.store')->middleware(IsOperator::class);
     Route::put('penilaian/update/{nilai}', [NilaiController::class, 'update'])->name('penilaian.update')->middleware(IsOperator::class);
