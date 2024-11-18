@@ -18,9 +18,9 @@
             <p class="text-lg text-gray-700 mt-4">
                 Sistem Pendukung Keputusan Copras adalah sistem yang membantu pengambilan keputusan dengan metode Copras
             </p>
-            <button class="mt-6 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+            {{-- <button class="mt-6 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
                 <a href="#">Jelajahi Sekarang</a>
-            </button>
+            </button> --}}
         </div>
     
     @php
