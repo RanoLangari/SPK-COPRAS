@@ -12,8 +12,7 @@
     <link href="https://cdn.datatables.net/2.1.5/css/dataTables.tailwindcss.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.1.5/js/dataTables.tailwindcss.js"></script>
-  
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/1b05bcc72f.js" crossorigin="anonymous"></script>
     <title>Copras App</title>
 </head>
