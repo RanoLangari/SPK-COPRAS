@@ -20,11 +20,21 @@ class AuthController extends Controller
     public function loginUser(Request $request)
     {
         $credentials = $request->only('email', 'password');
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/');
+
+            // Respons JSON jika login berhasil
+            return response()->json([
+                'success' => true,
+                'redirect' => url('/'), // Ganti URL sesuai kebutuhan
+            ]);
         } else {
-            return redirect('login')->with('error_message', "Wrong Email or Password");
+            // Respons JSON jika login gagal
+            return response()->json([
+                'success' => false,
+                'message' => "Wrong Email or Password",
+            ], 401); // Status 401 untuk login gagal
         }
     }
     public function register()
