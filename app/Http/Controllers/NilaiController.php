@@ -22,7 +22,7 @@ class NilaiController extends Controller
 
         foreach ($alternatifs as $alternatif) {
             foreach ($kriterias as $kriteria) {
-                $subkriterias = SubKriteria::where('kriteria_id', $kriteria->id)->get(); // Mengambil subkriteria berdasarkan kriteria_id
+                $subkriterias = SubKriteria::where('kriteria_id', $kriteria->id)->get();
                 foreach ($subkriterias as $subkriteria) {
                     $totalBobotSubKriteria = Nilai::join('subkriteria', 'nilai.subkriteria_id', '=', 'subkriteria.id')
                         ->where('subkriteria.kriteria_id', $kriteria->id)
@@ -38,9 +38,9 @@ class NilaiController extends Controller
                             'nama_alternatif' => $alternatif->nama_alternatif,
                             'kriteria_id' => $kriteria->id,
                             'subkriteria_id' => $subkriteria->id,
-                            'bobot' => $subkriteria->bobot,
-                            'total' => $totalBobotSubKriteria,
-                            'nilai_normalisasi' => $subkriteria->bobot / $totalBobotSubKriteria
+                            'bobot' => round($subkriteria->bobot, 3),
+                            'total' => round($totalBobotSubKriteria, 3),
+                            'nilai_normalisasi' => round($subkriteria->bobot / $totalBobotSubKriteria, 3)
                         ];
                     }
                 }
@@ -50,21 +50,22 @@ class NilaiController extends Controller
         $nilaiBobotNormalisasi = [];
         foreach ($nilaiNormalisasi as $nilai) {
             $kriteria = Kriteria::find($nilai['kriteria_id']);
-            if ($subkriteria) {
+            if ($kriteria) {
                 $nilaiBobotNormalisasi[] = [
                     'alternatif_id' => $nilai['alternatif_id'],
                     'nama_alternatif' => $nilai['nama_alternatif'],
                     'subkriteria_id' => $nilai['subkriteria_id'],
                     'kriteria_id' => $nilai['kriteria_id'],
                     'nilai_normalisasi' => $nilai['nilai_normalisasi'],
-                    "bobot" => $kriteria->bobot,
-                    'nilai_bobot_normalisasi' => $nilai['nilai_normalisasi'] * $kriteria->bobot
+                    'bobot' => round($kriteria->bobot, 3),
+                    'nilai_bobot_normalisasi' => round($nilai['nilai_normalisasi'] * $kriteria->bobot, 3)
                 ];
             }
         }
+
         $totalNilaiMaksBenefit = [];
         $totalNilaiMinCost = [];
-        $sumMinCostAll = 0;
+        $sumMinCostAll = 0.0;
         foreach ($nilaiBobotNormalisasi as $nilai) {
             $kriteria = Kriteria::find($nilai['kriteria_id']);
             if ($kriteria->tipe == 'Benefit') {
@@ -72,7 +73,7 @@ class NilaiController extends Controller
                     $totalNilaiMaksBenefit[$nilai['alternatif_id']] = [
                         'alternatif_id' => $nilai['alternatif_id'],
                         'nama_alternatif' => $nilai['nama_alternatif'],
-                        'total_normalisasi' => 0
+                        'total_normalisasi' => 0.0
                     ];
                 }
                 $totalNilaiMaksBenefit[$nilai['alternatif_id']]['total_normalisasi'] += $nilai['nilai_bobot_normalisasi'];
@@ -81,67 +82,79 @@ class NilaiController extends Controller
                     $totalNilaiMinCost[$nilai['alternatif_id']] = [
                         'alternatif_id' => $nilai['alternatif_id'],
                         'nama_alternatif' => $nilai['nama_alternatif'],
-                        'total_normalisasi' => 0
+                        'total_normalisasi' => 0.0
                     ];
                 }
                 $totalNilaiMinCost[$nilai['alternatif_id']]['total_normalisasi'] += $nilai['nilai_bobot_normalisasi'];
-
                 $sumMinCostAll += $nilai['nilai_bobot_normalisasi'];
             }
         }
+        foreach ($totalNilaiMaksBenefit as &$value) {
+            $value['total_normalisasi'] = round($value['total_normalisasi'], 3);
+        }
+        foreach ($totalNilaiMinCost as &$value) {
+            $value['total_normalisasi'] = round($value['total_normalisasi'], 3);
+        }
+        $sumMinCostAll = round($sumMinCostAll, 3);
 
         $bobotRelatif = [];
-        $totalBobotRelatif = 0;
+        $totalBobotRelatif = 0.0;
 
         foreach ($totalNilaiMinCost as $key => $value) {
+            $bobotRelatifValue = round(1 / $value['total_normalisasi'], 3);
             $bobotRelatif[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
                 'nama_alternatif' => $value['nama_alternatif'],
-                'bobot_relatif' => 1 / $value['total_normalisasi'],
+                'bobot_relatif' => $bobotRelatifValue,
             ];
-            $totalBobotRelatif += 1 / $value['total_normalisasi'];
+            $totalBobotRelatif += $bobotRelatifValue;
         }
+        $totalBobotRelatif = round($totalBobotRelatif, 3);
 
         $MultipleTotalBobotRelatifAndMinCost = [];
         foreach ($totalNilaiMinCost as $key => $value) {
+            $product = round($value['total_normalisasi'] * $totalBobotRelatif, 3);
             $MultipleTotalBobotRelatifAndMinCost[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
                 'nama_alternatif' => $value['nama_alternatif'],
-                'total' => $value['total_normalisasi'] * $totalBobotRelatif,
+                'total' => $product,
             ];
         }
 
         $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost = [];
         foreach ($MultipleTotalBobotRelatifAndMinCost as $key => $value) {
+            $division = round($sumMinCostAll / $value['total'], 3);
             $DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
                 'nama_alternatif' => $value['nama_alternatif'],
-                'total' => $sumMinCostAll / $value['total'],
+                'total' => $division,
             ];
         }
 
         $totalQmax = [];
         foreach ($DistributionSumMinCostAllWithMultipleTotalBobotRelatifAndMinCost as $key => $value) {
             if (isset($totalNilaiMaksBenefit[$value['alternatif_id']])) {
+                $total = round($value['total'] + $totalNilaiMaksBenefit[$value['alternatif_id']]['total_normalisasi'], 3);
                 $totalQmax[$key] = [
                     'alternatif_id' => $value['alternatif_id'],
                     'nama_alternatif' => $value['nama_alternatif'],
                     'maksbenefit' => $totalNilaiMaksBenefit[$value['alternatif_id']]['total_normalisasi'],
-                    'total' => $value['total'] + $totalNilaiMaksBenefit[$value['alternatif_id']]['total_normalisasi'],
+                    'total' => $total,
                 ];
             }
         }
 
-        $QMax = max(array_column($totalQmax, 'total'));
+        $QMax = round(max(array_column($totalQmax, 'total')), 3);
+
         $UIValue = [];
         foreach ($totalQmax as $key => $value) {
+            $percentage = round(($value['total'] / $QMax) * 100, 3);
             $UIValue[$key] = [
                 'alternatif_id' => $value['alternatif_id'],
                 'nama_alternatif' => $value['nama_alternatif'],
-                'value' => ($value['total'] / $QMax) * 100
+                'value' => $percentage
             ];
         }
-
 
         foreach ($UIValue as $value) {
             Rangking::updateOrCreate(
@@ -149,7 +162,7 @@ class NilaiController extends Controller
                 ['nilai' => $value['value']]
             );
         }
-    } 
+    }
 
     public function index()
     {
@@ -157,8 +170,8 @@ class NilaiController extends Controller
         $alternatifs = Alternatif::where('periode', $latestPeriode)->get();
         $subkriterias = SubKriteria::all();
         $nilais = Nilai::with(['alternatif', 'subkriteria.kriteria'])
-                       ->whereIn('alternatif_id', $alternatifs->pluck('id'))
-                       ->get();
+            ->whereIn('alternatif_id', $alternatifs->pluck('id'))
+            ->get();
 
         $bobotTerbesar = Kriteria::max('bobot');
         $kriteriaDenganBobotTerbesar = Kriteria::where('bobot', $bobotTerbesar)->first()->id;
@@ -172,7 +185,7 @@ class NilaiController extends Controller
                 if ($group->count() > 1) {
                     return $group->sortByDesc(function ($ranking) use ($nilais, $kriteriaDenganBobotTerbesar) {
                         $nilaiAlternatif = $nilais->where('alternatif_id', $ranking->alternatif_id)
-                            ->first(function($nilai) use ($kriteriaDenganBobotTerbesar) {
+                            ->first(function ($nilai) use ($kriteriaDenganBobotTerbesar) {
                                 return $nilai->subkriteria->kriteria_id === $kriteriaDenganBobotTerbesar;
                             });
                         return $nilaiAlternatif ? $nilaiAlternatif->nilai : 0;
@@ -207,9 +220,9 @@ class NilaiController extends Controller
         $nilaiData = [];
         foreach ($nilai_inputs as $kriteria_id => $nilai) {
             $subkriterias = SubKriteria::where('kriteria_id', $kriteria_id)
-                                        ->where('start', '<=', $nilai)
-                                        ->where('end', '>=', $nilai)
-                                        ->get();
+                ->where('start', '<=', $nilai)
+                ->where('end', '>=', $nilai)
+                ->get();
             foreach ($subkriterias as $subkriteria) {
                 $nilaiData[] = [
                     'alternatif_id' => $alternatif_id,
