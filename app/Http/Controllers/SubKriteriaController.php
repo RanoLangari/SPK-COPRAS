@@ -6,7 +6,6 @@ use App\Models\SubKriteria;
 use App\Models\Kriteria;
 use Illuminate\Http\Request;
 
-
 class SubKriteriaController extends Controller
 {
     public function index()

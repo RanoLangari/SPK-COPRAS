@@ -26,10 +26,12 @@ class AlternatifController extends Controller
     {
         $request->validate([
             'nama_alternatif' => 'required',
+            'kategori' => 'required',
             'periode' => 'required'
         ]);
         Alternatif::create([
             'nama_alternatif' => $request->nama_alternatif,
+            'kategori' => $request->kategori,
             'periode' => $request->periode
         ]);
         return redirect('/alternatif');
@@ -40,10 +42,12 @@ class AlternatifController extends Controller
     {
         $request->validate([
             'nama_alternatif' => 'required',
+            'kategori' => 'required',
             'periode' => 'required'
         ]);
         $alternatif->update([
             'nama_alternatif' => $request->nama_alternatif,
+            'kategori' => $request->kategori,
             'periode' => $request->periode
         ]);
         return redirect('/alternatif');

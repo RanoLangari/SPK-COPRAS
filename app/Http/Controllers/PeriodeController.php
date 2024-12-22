@@ -37,7 +37,13 @@ class PeriodeController extends Controller
     // \Illuminate\Support\Facades\Log::debug("Formatted Periode: {$formattedPeriode}, Periode: {$periode}");
 
         // Ambil data alternatif dan rangking berdasarkan periode yang dipilih
-        $alternatifs = Alternatif::with('rangking')->where('periode', $periode)->get();
+        $alternatifs = Alternatif::with('rangking')->where('periode', $periode);
+
+        if ($request->has('kategori') && $request->kategori != '') {
+            $alternatifs = $alternatifs->where('kategori', $request->kategori);
+        }
+
+        $alternatifs = $alternatifs->get();
 
         // Parsing periode dari format YYYY-WW menjadi Tahun, Bulan, dan Minggu sesuai kalender
         [$year, $weekNumber] = explode('-W', $periode);

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('alternatif', function (Blueprint $table) {
             $table->id();
             $table->string('nama_alternatif');
+            $table->enum('kategori', ['Pinjaman Umum', 'Pinjaman Produktif', 'Pinjaman Konsumtif', 'Pinjaman lunak']);
             $table->timestamps();
             $table->string('periode');
         });
