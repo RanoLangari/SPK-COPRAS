@@ -151,10 +151,16 @@ class NilaiController extends Controller
         }
     } 
 
-    public function index()
+    public function index(Request $request)
     {
         $latestPeriode = Alternatif::max('periode');
-        $alternatifs = Alternatif::where('periode', $latestPeriode)->get();
+        $alternatifs = Alternatif::where('periode', $latestPeriode);
+
+        if ($request->has('kategori') && $request->kategori != '') {
+            $alternatifs = $alternatifs->where('kategori', $request->kategori);
+        }
+
+        $alternatifs = $alternatifs->get();
         $subkriterias = SubKriteria::all();
         $nilais = Nilai::with(['alternatif', 'subkriteria.kriteria'])
             ->whereIn('alternatif_id', $alternatifs->pluck('id'))

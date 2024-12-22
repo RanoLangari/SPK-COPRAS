@@ -11,7 +11,7 @@ class Alternatif extends Model
     use HasFactory;
     
     protected $table = 'alternatif';
-    protected $fillable = ['nama_alternatif', 'periode'];
+    protected $fillable = ['nama_alternatif','kategori','periode'];
 
     public function nilai()
     {

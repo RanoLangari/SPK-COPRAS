@@ -52,10 +52,11 @@
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
-            text: '{{ session('
-            success ') }}',
+            text: '{{ session('success') }}',
             showConfirmButton: false,
             timer: 2000
+        }).then(() => {
+            window.location.href = "{{ route('login') }}";
         });
         @endif
 
@@ -75,6 +76,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit(); // Jika pengguna mengonfirmasi, kirim form
+                       
                     }
                 });
             } else {
