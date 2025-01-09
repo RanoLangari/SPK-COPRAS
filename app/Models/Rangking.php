@@ -10,7 +10,7 @@ class Rangking extends Model
     use HasFactory;
 
     protected $table = 'rangking';
-    protected $fillable = ['alternatif_id', 'nilai'];
+    protected $fillable = ['alternatif_id', 'nilai', 'keterangan'];
 
     public function alternatif()
     {

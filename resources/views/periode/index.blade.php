@@ -70,6 +70,7 @@
                             <th class="py-3 px-6 text-left">Nama Alternatif</th>
                             <th class="py-3 px-6 text-left">Jenis Pinjaman</th>
                             <th class="py-3 px-6 text-left">Nilai</th>
+                            <th class="py-3 px-6 text-left">Rekomendasi</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-600 text-sm font-light">
@@ -90,6 +91,9 @@
                                 <td class="py-3 px-6 text-left">{{ $alternatif->kategori }}</td>
                                 <td class="py-3 px-6 text-left">
                                     {{ optional($alternatif->rangking)->nilai ?? 'Tidak ada nilai' }}
+                                </td>
+                                <td class="py-3 px-6 text-left">
+                                    {{ optional($alternatif->rangking)->nilai >= 60 ? 'Direkomendasikan' : 'Tidak Direkomendasikan' }}
                                 </td>
                             </tr>
 
