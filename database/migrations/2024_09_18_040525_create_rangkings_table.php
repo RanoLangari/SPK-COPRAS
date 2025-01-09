@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('alternatif_id');
             $table->double('nilai');
+            $table->string('keterangan');
 
             $table->foreign('alternatif_id')->references('id')->on('alternatif')->onDelete('cascade');
             $table->timestamps();
